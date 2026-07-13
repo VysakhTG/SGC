@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)file:///home/user/Downloads/php-lab-questions.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHP Lab — Practice Set</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="PHP%20Lab%20%E2%80%94%20Practice%20Set_files/css2.html" rel="stylesheet">
+<style>
+  :root{
+    --bg:#11131c;--paper:#fbfbfd;--ink:#1a1c2b;--ink-soft:#494c62;--ink-faint:#8b8ea3;
+    --line:#e7e7ee;--bar:#1b1e2b;--php:#777bb4;--php-deep:#565f89;
+    --d1:#3fb950;--d2:#39a0c4;--d3:#777bb4;--d4:#e07a3f;
+    --code-bg:#15172180;
+    --sans:'Inter',system-ui,sans-serif;--disp:'Space Grotesk',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;padding:clamp(14px,4vw,48px)}
+  .shell{max-width:1000px;margin:0 auto;border-radius:14px;overflow:hidden;box-shadow:0 24px 60px -20px rgba(0,0,0,.55);border:1px solid #2c3040}
+
+  .titlebar{background:var(--bar);padding:16px 22px 0}
+  .chrome{display:flex;gap:8px;align-items:center;margin-bottom:18px}
+  .dot{width:12px;height:12px;border-radius:50%}
+  .dot.r{background:#ff5f56}.dot.y{background:#ffbd2e}.dot.g{background:#27c93f}
+  .crumb{margin-left:10px;font-family:var(--mono);font-size:.72rem;color:#6b7088;letter-spacing:.04em}
+  .masthead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 16px;padding-bottom:20px}
+  .masthead h1{font-family:var(--disp);font-weight:700;color:#fff;font-size:clamp(1.8rem,5vw,2.7rem);margin:0;letter-spacing:-.02em}
+  .masthead h1 .tag{color:var(--php);font-family:var(--mono);font-weight:500;font-size:.5em;vertical-align:.35em}
+  .masthead p{color:#9a9eb6;margin:0;max-width:52ch;font-size:.92rem}
+
+  .tabs{display:flex;gap:2px;padding:0 14px;background:var(--bar);border-bottom:1px solid #000;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{appearance:none;border:0;cursor:pointer;white-space:nowrap;background:transparent;color:#7e83a0;font-family:var(--mono);font-size:.82rem;font-weight:500;padding:13px 16px 12px;border-top:2px solid transparent;display:flex;align-items:center;gap:8px;transition:color .15s,background .15s}
+  .tab:hover{color:#c7cae0}
+  .tab .lvl{width:7px;height:7px;border-radius:50%;flex:none}
+  .tab[aria-selected="true"]{background:var(--paper);color:var(--ink);border-top:2px solid var(--accent);border-radius:6px 6px 0 0}
+  .tab:focus-visible{outline:2px solid var(--php);outline-offset:-2px}
+
+  .stage{background:var(--paper)}
+  .panel{display:none;padding:clamp(20px,4vw,38px) clamp(16px,4vw,40px) 40px}
+  .panel.on{display:block;animation:rise .35s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .panel-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:6px}
+  .panel-head .assign{font-family:var(--mono);font-size:1.05rem}
+  .panel-head .assign .var{color:var(--accent);font-weight:700}
+  .panel-head .assign .eq{color:var(--ink-faint)}
+  .panel-head .focus{font-family:var(--disp);font-weight:600;font-size:1.05rem}
+  .panel-note{font-family:var(--mono);font-size:.8rem;color:var(--ink-faint);margin:0 0 26px;padding-left:2px;line-height:1.5}
+  .panel-note::before{content:"// "}
+
+  .q{display:flex;border:1px solid var(--line);border-radius:10px;margin-bottom:14px;overflow:hidden;background:#fff}
+  .gutter{flex:none;width:52px;background:#f3f3f7;border-right:1px solid var(--line);border-left:3px solid var(--accent);font-family:var(--mono);color:var(--ink-faint);font-size:.85rem;font-weight:700;display:flex;align-items:flex-start;justify-content:center;padding-top:18px}
+  .body{padding:16px 20px 18px;flex:1;min-width:0}
+  .body h3{font-family:var(--disp);font-size:1.08rem;font-weight:600;margin:0 0 7px;letter-spacing:-.01em}
+  .scn{margin:0 0 11px;color:var(--ink-soft);font-size:.93rem}
+  .scn b{color:var(--ink);font-weight:600}
+
+  .steps{margin:0 0 12px;padding:0;list-style:none;counter-reset:s}
+  .steps li{position:relative;padding-left:28px;margin-bottom:6px;font-size:.92rem;color:var(--ink-soft)}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:1px;font-family:var(--mono);font-size:.7rem;font-weight:700;color:#fff;background:var(--accent);border-radius:5px;width:19px;height:19px;display:flex;align-items:center;justify-content:center;opacity:.9}
+  .steps code,.scn code,.body p code{font-family:var(--mono);font-size:.85em;background:#f0f0f8;border:1px solid #e7e7f2;border-radius:4px;padding:.5px 5px;color:var(--php-deep)}
+
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .chip{font-family:var(--mono);font-size:.72rem;color:var(--php-deep);background:#f0f0f8;border:1px solid #e2e2f0;border-radius:5px;padding:2px 7px}
+  .chip.op{color:var(--d4);background:#fdf1e9;border-color:#f6ddc9}
+
+  .io{font-family:var(--mono);font-size:.78rem;background:var(--code-bg);border:1px solid var(--line);border-radius:7px;padding:9px 12px;margin:11px 0 2px;color:var(--ink-soft);white-space:pre-wrap;word-break:break-word}
+  .io::before{content:"in/out  ";color:var(--ink-faint);font-weight:700}
+  .io .k{color:var(--php-deep);font-weight:700}
+  .io .arrow{color:var(--d4)}
+
+  .footer{background:var(--bar);color:#7e83a0;font-family:var(--mono);font-size:.74rem;padding:14px 22px;text-align:center;letter-spacing:.02em}
+  .footer b{color:#aab0cc;font-weight:500}
+
+  @media (max-width:560px){.gutter{width:38px;padding-top:16px}.masthead p{display:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="titlebar">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="crumb">~/lab/php — practiceSet.php</span>
+    </div>
+    <div class="masthead">
+      <h1>PHP&nbsp;Lab<span class="tag">&lt;?php</span></h1>
+      <p>Arrays, strings and operators — mixed together and harder each 
+level. Level 1 hands you the functions; by Level 4 you're on your own. 
+Clear a question fast and your instructor moves you up.</p>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Difficulty levels">
+    <button class="tab" role="tab" id="t1" aria-controls="p1" aria-selected="true" style="--accent:var(--d1)" tabindex="0"><span class="lvl" style="background:var(--d1)"></span>$starter.php</button>
+    <button class="tab" role="tab" id="t2" aria-controls="p2" aria-selected="false" style="--accent:var(--d2)" tabindex="-1"><span class="lvl" style="background:var(--d2)"></span>$builder.php</button>
+    <button class="tab" role="tab" id="t3" aria-controls="p3" aria-selected="false" style="--accent:var(--d3)" tabindex="-1"><span class="lvl" style="background:var(--d3)"></span>$pro.php</button>
+    <button class="tab" role="tab" id="t4" aria-controls="p4" aria-selected="false" style="--accent:var(--d4)" tabindex="-1"><span class="lvl" style="background:var(--d4)"></span>$boss.php</button>
+  </div>
+
+  <div class="stage">
+
+    <!-- ===================== LEVEL 1 : EASY (hints) ===================== -->
+    <section class="panel on" id="p1" role="tabpanel" aria-labelledby="t1" style="--accent:var(--d1)">
+      <div class="panel-head">
+        <span class="assign"><span class="var">$starter</span> <span class="eq">=</span> "Level&nbsp;1";</span>
+        <span class="focus">Easy — mixed warm-ups</span>
+      </div>
+      <p class="panel-note">Function hints are tagged on every card. Use them to find your footing.</p>
+
+      <div class="q"><div class="gutter">01</div><div class="body">
+        <h3>Token counter</h3>
+        <p class="scn">A government office serves people by token in arrival order and announces each name over a speaker, in capitals.</p>
+        <ol class="steps">
+          <li>Start with a queue array of names.</li>
+          <li>Remove the person at the front with <code>array_shift()</code>.</li>
+          <li>Print <code>"NOW SERVING: " . strtoupper($name)</code> using the <code>.</code> operator.</li>
+          <li>Show how many are still waiting with <code>count()</code>.</li>
+        </ol>
+        <div class="io"><span class="k">["Asha","Ravi"]</span> <span class="arrow">→</span> NOW SERVING: ASHA · 1 waiting</div>
+        <div class="tags"><span class="chip">array_shift</span><span class="chip">strtoupper</span><span class="chip">count</span><span class="chip op">. concat</span></div>
+      </div></div>
+
+      <div class="q"><div class="gutter">02</div><div class="body">
+        <h3>Members-only door</h3>
+        <p class="scn">A gym checks a typed name against its member list, ignoring capitalisation.</p>
+        <ol class="steps">
+          <li>Keep member names in an array (stored lowercase).</li>
+          <li>Lowercase the typed name with <code>strtolower()</code>.</li>
+          <li>Use <code>in_array()</code> inside an <code>if / else</code> to print "Access granted" or "Access denied".</li>
+        </ol>
+        <div class="io">members <span class="k">["ravi"]</span>, type "RAVI" <span class="arrow">→</span> Access granted</div>
+        <div class="tags"><span class="chip">in_array</span><span class="chip">strtolower</span><span class="chip op">if / else</span></div>
+      </div></div>
+
+      <div class="q"><div class="gutter">03</div><div class="body">
+        <h3>Canteen board, cheapest first</h3>
+        <p class="scn">A canteen lists dishes cheapest-first — without losing which price belongs to which dish.</p>
+        <ol class="steps">
+          <li>Build an associative array of <code>dish =&gt; price</code>.</li>
+          <li>Sort by value ascending, keeping keys, with <code>asort()</code>.</li>
+          <li>Print each line as <code>"dish — ₹price"</code> using the <code>.</code> operator.</li>
+        </ol>
+        <div class="io"><span class="k">["Dosa"=&gt;40,"Tea"=&gt;10]</span> <span class="arrow">→</span> Tea — ₹10 · Dosa — ₹40</div>
+        <div class="tags"><span class="chip">asort</span><span class="chip">foreach</span><span class="chip op">. concat</span></div>
+      </div></div>
+
+      <div class="q"><div class="gutter">04</div><div class="body">
+        <h3>Username length rule</h3>
+        <p class="scn">A signup form rejects usernames shorter than 5 characters, and users often leave stray spaces.</p>
+        <ol class="steps">
+          <li>Clean the input with <code>trim()</code>.</li>
+          <li>Measure it with <code>strlen()</code>.</li>
+          <li>Using the <code>&lt;</code> operator, print "Too short" or "OK".</li>
+        </ol>
+        <div class="io"><span class="k">"  ab "</span> <span class="arrow">→</span> len 2 <span class="arrow">→</span> Too short</div>
+        <div class="tags"><span class="chip">trim</span><span class="chip">strlen</span><span class="chip op">&lt;</span></div>
+      </div></div>
+
+      <div class="q"><div class="gutter">05</div><div class="body">
+        <h3>Masked card number</h3>
+        <p class="scn">A receipt hides all but the last 4 digits of a card number.</p>
+        <ol class="steps">
+          <li>Grab the last 4 digits with <code>substr()</code> using a negative start.</li>
+          <li>Build <code>"**** **** **** 1234"</code> with the <code>.</code> operator.</li>
+        </ol>
+        <div class="io"><span class="k">"4716123412341234"</span> <span class="arrow">→</span> **** **** **** 1234</div>
+        <div class="tags"><span class="chip">substr</span><span class="chip op">. concat</span></div>
+      </div></div>
+
+      <div class="q"><div class="gutter">06</div><div class="body">
+        <h3>Restock without duplicates</h3>
+        <p class="scn">A delivery arrives; only items <b>not already</b> in stock should be added.</p>
+        <ol class="steps">
+          <li>Keep a stock array and a delivery array.</li>
+          <li>Loop the deliveries with <code>foreach</code>.</li>
+          <li>If <code>in_array()</code> says an item is <b>not</b> in stock, add it with <code>array_push()</code> and bump a counter with <code>++</code>.</li>
+          <li>Print the updated stock and the number of new items.</li>
+        </ol>
+        <div class="io">stock <span class="k">[Pen]</span>, delivery <span class="k">[Pen,Tape]</span> <span class="arrow">→</span> +Tape · 1 new</div>
+        <div class="tags"><span class="chip">in_array</span><span class="chip">array_push</span><span class="chip">foreach</span><span class="chip op">++ · !</span></div>
+      </div></div>
+
+      <div class="q"><div class="gutter">07</div><div class="body">
+        <h3>High-score leaderboard</h3>
+        <p class="scn">A game shows scores from highest to lowest, with ranks.</p>
+        <ol class="steps">
+          <li>Sort an indexed score array descending with <code>rsort()</code>.</li>
+          <li>Print <code>"Rank N: score"</code> using the loop index <code>+ 1</code>.</li>
+        </ol>
+        <div class="io"><span class="k">[90,240,150]</span> <span class="arrow">→</span> Rank 1: 240 · Rank 2: 150 · Rank 3: 90</div>
+        <div class="tags"><span class="chip">rsort</span><span class="chip op">+</span></div>
+      </div></div>
+    </section>
+
+    <!-- ===================== LEVEL 2 : MEDIUM (steps only) ===================== -->
+    <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2" style="--accent:var(--d2)">
+      <div class="panel-head">
+        <span class="assign"><span class="var">$builder</span> <span class="eq">=</span> "Level&nbsp;2";</span>
+        <span class="focus">Medium — combine two or three ideas</span>
+      </div>
+      <p class="panel-note">Steps only now — you decide which functions fit each step.</p>
+
+      <div class="q"><div class="gutter">01</div><div class="body">
+        <h3>Letter-frequency board</h3>
+        <p class="scn">A word game shows which letters a word uses most, most-frequent first.</p>
+        <ol class="steps">
+          <li>Lowercase the word and break it into individual letters.</li>
+          <li>Count how often each letter appears, storing it as letter&nbsp;→&nbsp;count.</li>
+          <li>Sort the tally by count, highest first, keeping the letters attached, and print each with its count.</li>
+        </ol>
+        <div class="io"><span class="k">"Banana"</span> <span class="arrow">→</span> a:3 · n:2 · b:1</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">02</div><div class="body">
+        <h3>Email domain gatekeeper</h3>
+        <p class="scn">A signup only accepts emails from approved domains.</p>
+        <ol class="steps">
+          <li>Find where the "@" sits. If there's no "@", reject as 
+invalid — and remember the "@" could legitimately be at position 0, so 
+test strictly.</li>
+          <li>Take the part after the "@" as the domain.</li>
+          <li>Check the domain against your approved list and print "Accepted" or "Rejected".</li>
+        </ol>
+        <div class="io"><span class="k">"sam@partner.com"</span>, allow [partner.com] <span class="arrow">→</span> Accepted</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">03</div><div class="body">
+        <h3>Sorted directory with lookup</h3>
+        <p class="scn">A contacts app shows name&nbsp;→&nbsp;phone sorted by name and looks up a number regardless of capitalisation.</p>
+        <ol class="steps">
+          <li>Sort the directory by name (the key) and print it.</li>
+          <li>For a lookup, make the typed name and the stored names comparable regardless of case.</li>
+          <li>Find the match and print the phone number, or "No such contact".</li>
+        </ol>
+        <div class="io">lookup <span class="k">"RAVI"</span> <span class="arrow">→</span> 99100</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">04</div><div class="body">
+        <h3>Priority to-do list</h3>
+        <p class="scn">Normal tasks go to the end, urgent ones jump to the front, and "done" removes whatever is at the end.</p>
+        <ol class="steps">
+          <li>Add a normal task to the end of the list.</li>
+          <li>Add an urgent task to the front.</li>
+          <li>Mark a task done by removing the one currently at the end.</li>
+          <li>After a few operations, print the list and how many tasks remain.</li>
+        </ol>
+        <div class="io">push "mail" · urgent "bug" to front · done <span class="arrow">→</span> ["bug"]</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">05</div><div class="body">
+        <h3>Top three sellers</h3>
+        <p class="scn">A shop wants its three best-selling products, keeping the product names.</p>
+        <ol class="steps">
+          <li>Store products as product&nbsp;→&nbsp;unitsSold.</li>
+          <li>Sort by units sold, highest first, keeping the names attached.</li>
+          <li>Print only the first three, stopping once you've shown three (use a counter).</li>
+        </ol>
+        <div class="io"><span class="k">[Pen=&gt;120,Bag=&gt;300,Cap=&gt;90,Mug=&gt;200]</span> <span class="arrow">→</span> Bag, Mug, Pen</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">06</div><div class="body">
+        <h3>Confirm password</h3>
+        <p class="scn">A confirm-password field must exactly match the password and be at least 6 characters.</p>
+        <ol class="steps">
+          <li>Trim stray spaces from both inputs.</li>
+          <li>Compare the two strings for an exact match.</li>
+          <li>Also check the length is at least 6. Print "OK", "Do not match", or "Too short".</li>
+        </ol>
+        <div class="io"><span class="k">"abc123"</span> / <span class="k">"abc123"</span> <span class="arrow">→</span> OK</div>
+      </div></div>
+    </section>
+
+    <!-- ===================== LEVEL 3 : HARD (steps only) ===================== -->
+    <section class="panel" id="p3" role="tabpanel" aria-labelledby="t3" style="--accent:var(--d3)">
+      <div class="panel-head">
+        <span class="assign"><span class="var">$pro</span> <span class="eq">=</span> "Level&nbsp;3";</span>
+        <span class="focus">Hard — chain it all together</span>
+      </div>
+      <p class="panel-note">Steps only, tougher problems — expect to mix arrays, strings and operators in one go.</p>
+
+      <div class="q"><div class="gutter">01</div><div class="body">
+        <h3>Low-stock report, sorted</h3>
+        <p class="scn">A warehouse flags products below a reorder level of 10 and prints them, scarcest first.</p>
+        <ol class="steps">
+          <li>From a product&nbsp;→&nbsp;quantity list, pick out only products below the reorder level.</li>
+          <li>Sort those by quantity, lowest first, keeping the names.</li>
+          <li>Print each as "product: qty left", plus the total number flagged.</li>
+        </ol>
+        <div class="io"><span class="k">[Pen=&gt;40,Ink=&gt;4,Tape=&gt;8]</span> <span class="arrow">→</span> Ink: 4 · Tape: 8 · 2 flagged</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">02</div><div class="body">
+        <h3>Result line parser</h3>
+        <p class="scn">Exam results arrive as text lines like <code>"Asha,88,a"</code> and need cleaning.</p>
+        <ol class="steps">
+          <li>Split a line into its three fields: name, mark, grade.</li>
+          <li>Trim each field and convert the grade to uppercase.</li>
+          <li>Print "NAME scored MARK — grade G", and flag "(FAIL)" if the mark is below 40.</li>
+        </ol>
+        <div class="io"><span class="k">"Ravi,35,d"</span> <span class="arrow">→</span> RAVI scored 35 — grade D (FAIL)</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">03</div><div class="body">
+        <h3>Leaderboard from rounds</h3>
+        <p class="scn">A tournament totals each player's scores across rounds, then ranks them.</p>
+        <ol class="steps">
+          <li>Each player has an array of round scores; add up each player's scores into a player&nbsp;→&nbsp;total tally.</li>
+          <li>Sort the tally by total, highest first, keeping the names.</li>
+          <li>Print "N. NAME — total", numbering the ranks.</li>
+        </ol>
+        <div class="io"><span class="k">Asha[80,90] · Ravi[70,60]</span> <span class="arrow">→</span> 1. ASHA — 170 · 2. RAVI — 130</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">04</div><div class="body">
+        <h3>Unique username generator</h3>
+        <p class="scn">A system builds usernames and must avoid clashing with ones already taken.</p>
+        <ol class="steps">
+          <li>Build a base username: lowercase the full name, drop spaces, take the first name.</li>
+          <li>If that base already exists in the taken list, append a number and keep increasing it until it's free.</li>
+          <li>Print the final, unique username.</li>
+        </ol>
+        <div class="io"><span class="k">"Ravi Kumar"</span>, taken [ravi] <span class="arrow">→</span> ravi2</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">05</div><div class="body">
+        <h3>Top three words</h3>
+        <p class="scn">A blog shows its three most common words in a sentence.</p>
+        <ol class="steps">
+          <li>Split the sentence into words and tally each word's count, ignoring case.</li>
+          <li>Sort the tally by count, highest first.</li>
+          <li>Print the top three words with their counts.</li>
+        </ol>
+        <div class="io"><span class="k">"the cat the dog the"</span> <span class="arrow">→</span> the:3 · cat:1 · dog:1</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">06</div><div class="body">
+        <h3>Clinic queue with VIPs</h3>
+        <p class="scn">Regular patients join the back, VIPs jump to the front, and the nurse serves from the front, logging each call.</p>
+        <ol class="steps">
+          <li>Add some regular patients to the back and a VIP to the front.</li>
+          <li>Serve patients one by one from the front until the queue is empty.</li>
+          <li>For each, print "Calling #N: NAME" (capitalised), increasing the number each time.</li>
+        </ol>
+        <div class="io">back[Asha,Ravi] · front[VIP] <span class="arrow">→</span> #1 VIP · #2 ASHA · #3 RAVI</div>
+      </div></div>
+    </section>
+
+    <!-- ===================== LEVEL 4 : EXPERT (question + I/O only) ===================== -->
+    <section class="panel" id="p4" role="tabpanel" aria-labelledby="t4" style="--accent:var(--d4)">
+      <div class="panel-head">
+        <span class="assign"><span class="var">$boss</span> <span class="eq">=</span> "Level&nbsp;4";</span>
+        <span class="focus">Expert — design it yourself</span>
+      </div>
+      <p class="panel-note">Just the brief and the expected output. No steps, no hints — work out the approach.</p>
+
+      <div class="q"><div class="gutter">01</div><div class="body">
+        <h3>Mini billing system</h3>
+        <p class="scn">Build a checkout for a shopping cart. Each item has a <b>name, unit price and quantity</b>. Work out each line total, sum the subtotal, apply a <b>10% discount</b> when the subtotal crosses ₹500, add <b>5% tax</b> on the discounted amount, and print an itemised receipt with item names in capitals and the final payable total.</p>
+        <div class="io">2×₹150 + 1×₹250 = ₹550 <span class="arrow">→</span> −10% = ₹495 <span class="arrow">→</span> +5% tax <span class="arrow">→</span> ₹519.75</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">02</div><div class="body">
+        <h3>Tournament ranking with ties</h3>
+        <p class="scn">Given players and their total scores, print a leaderboard from highest to lowest. Players on the <b>same score share the same rank</b>, and the next rank skips accordingly (1, 2, 2, 4). Format each line as "rank. NAME — score".</p>
+        <div class="io"><span class="k">Asha 90 · Ravi 90 · Meera 80</span> <span class="arrow">→</span> 1. ASHA 90 · 1. RAVI 90 · 3. MEERA 80</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">03</div><div class="body">
+        <h3>Poll result tabulator</h3>
+        <p class="scn">From a list of raw votes (each a candidate's name), count the votes per candidate, show each candidate's <b>share as a percentage</b> of the total, and announce the winner — or report a tie if the top two are equal.</p>
+        <div class="io"><span class="k">[A,B,A,A,C]</span> <span class="arrow">→</span> A 60% · B 20% · C 20% · Winner: A</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">04</div><div class="body">
+        <h3>Searchable contact manager</h3>
+        <p class="scn">Manage a name&nbsp;→&nbsp;phone directory supporting three operations: <b>add</b> a contact (reject if the name already exists), <b>search</b> by a partial name fragment (case-insensitive, may match several), and <b>print</b> the whole directory sorted by name. Demonstrate each.</p>
+        <div class="io">search <span class="k">"ra"</span> <span class="arrow">→</span> Ravi, Prakash  (any name containing "ra")</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">05</div><div class="body">
+        <h3>Text analyser</h3>
+        <p class="scn">Given a paragraph of text, report four things: the <b>total word count</b>, the <b>character count excluding spaces</b>, the <b>longest word</b>, and the <b>single most frequent word</b> (case-insensitive).</p>
+        <div class="io"><span class="k">"the sky is the limit"</span> <span class="arrow">→</span> 5 words · 16 chars · longest "limit" · most common "the"</div>
+      </div></div>
+
+      <div class="q"><div class="gutter">06</div><div class="body">
+        <h3>Inventory transaction processor</h3>
+        <p class="scn">Start with an inventory of product&nbsp;→&nbsp;stock. Process a list of command strings like <code>"ADD Pen 10"</code> or <code>"SELL Ink 3"</code>: parse each, update the stock (<b>reject a SELL that exceeds stock</b>), then print the final inventory sorted by product name, flagging anything below a reorder level of 5.</p>
+        <div class="io"><span class="k">ADD Pen 10 · SELL Pen 7</span> <span class="arrow">→</span> Pen: 3 (LOW)</div>
+      </div></div>
+    </section>
+
+  </div>
+
+  <div class="footer">24 stations · 4 levels · hints fade as you climb — <b>start with $starter</b></div>
+</div>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const panels = Array.from(document.querySelectorAll('.panel'));
+  function select(i){
+    tabs.forEach((t,k)=>{
+      const on = k===i;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      panels[k].classList.toggle('on', on);
+    });
+  }
+  tabs.forEach((t,i)=>{
+    t.addEventListener('click', ()=>select(i));
+    t.addEventListener('keydown', e=>{
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+        e.preventDefault();
+        const next = e.key==='ArrowRight' ? (i+1)%tabs.length : (i-1+tabs.length)%tabs.length;
+        select(next); tabs[next].focus();
+      }
+    });
+  });
+  select(0);
+</script>
+
+
+</body></html>
